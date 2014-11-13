@@ -1,3 +1,28 @@
-task helloWorld << {
-  println 'hello, world'
+buildscript {
+  repositories { mavenCentral() }
+  dependencies { classpath 'org.ajoberstar:gradle-git:0.12.0' }
 }
+
+import org.ajoberstar.grgit.*
+
+def un
+def pw
+
+task cloneGitRepo << { 
+
+  def config = new ConfigSlurper().parse(new File('model-repository.properties').toURL())
+  
+  println config.git.url
+
+
+
+  Credentials cred = new Credentials(username: config.git.username, password: config.git.password)
+  Grgit.clone(dir: file('./downloads/models'), 
+              uri: config.git.url,
+	      credentials: cred
+             )
+
+}
+
+
+
